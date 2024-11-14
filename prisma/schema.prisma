@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+model Submission{
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  problemId  String   @db.ObjectId
+  userId     String   @db.ObjectId
+  code       String
+  status     String   // e.g., "Accepted", "Wrong Answer", "Runtime Error"
+  submittedAt DateTime @default(now())
+  
+  problem    Problem  @relation(fields: [problemId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+}
+model User {
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId
+  email         String         @unique
+  password      String
+  submissionHistory Submission[]   
+}
+
+model Problem{
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  difficulty  String
+  status      String 
+  examples     Example[]
+  input_format String[]
+  output_format String[]
+  testcases     String[]
+  expected_output String[]
+  constraints  String[]
+  topics       String[]
+  hints        String[]
+  submissionHistory Submission[] 
+}
+
+type Example{
+  input String
+  output String 
+  explanation String?
+}
