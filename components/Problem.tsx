@@ -8,6 +8,7 @@ import TestResult from './TestResult';
 import TestCase from './TestCase';
 import { useProbById } from '@/lib/api/QueriesandMurations';
 import Loader from './Loader';
+import { Question } from './Types/types';
 
 
 export default function App({id}:{id:string}) {
@@ -16,7 +17,7 @@ export default function App({id}:{id:string}) {
   
   if(loading) return <div className='w-full h-[100vh] bg-zinc-800'><Loader width={30} height={30}/></div>
   if(!problems) return <h1>Something went wrong!</h1>
-  const problem = Object.assign(problems);
+  const problem:Question = Object.assign(problems);
   return (
     <div className="w-full h-[100vh] overflow-scroll">
       <Tabs value={activeTab} onValueChange={setActiveTab}>

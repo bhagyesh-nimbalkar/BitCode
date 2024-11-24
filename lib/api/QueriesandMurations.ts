@@ -1,5 +1,6 @@
 import {useMutation, useQuery} from '@tanstack/react-query';
-import { createUser, getAllProblems, getProblemById, getuserSession, loginUser, logoutUser } from './api';
+import { createUser, getAllProblems, getProblemById, getProblemBySub, getSubResult, getuserSession, loginUser, logoutUser } from './api';
+import { Submission } from '@/components/Types/types';
 
 export const useCreateUser = ()=>{
     return useMutation({
@@ -28,6 +29,24 @@ export const useProbById = (id:string)=>{
         queryFn:()=>getProblemById(id),
    })
 }
+export const useSubResult = ()=>{
+    return useMutation({
+        mutationFn:async (id:string)=>{
+           const res = await getSubResult(id);
+           return res;
+        }
+    })
+}
+export const useProbSub = ()=>{
+    return useMutation({
+        mutationFn:async (data:Submission)=>{
+           console.log(data);
+           const res = await getProblemBySub(data);
+           return res;
+        }
+    })
+}
+
 export const useLogoutUser =()=>{
     return useMutation({
         mutationFn:async ()=>{

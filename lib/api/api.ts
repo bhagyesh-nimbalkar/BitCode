@@ -2,7 +2,7 @@
 import bcrypt from 'bcryptjs'
 import { prisma } from "@/prisma/config";
 import { getSession, login, logout } from '@/lib';
-import { Question } from '@/components/Types/types';
+import { Question, Submission } from '@/components/Types/types';
 
 export async function createUser({email,password}:{email:string,password:string}){
     try {
@@ -84,6 +84,48 @@ export async function getProblemById(id:string){
   } catch (error) {
      console.log(error);
      return {error:"Something went wrong!"}
+  }
+}
+export async function getSubResult(id:string){
+    const url = `https://judge0-ce.p.rapidapi.com/submissions/${id}?base64_encoded=false&fields=*`;
+    const options = {
+      method: 'GET',
+      headers: {
+        'x-rapidapi-key': 'e0ef2dda81msh1ab4dd5082a6a65p1056d9jsn058abbe43255',
+        'x-rapidapi-host': 'judge0-ce.p.rapidapi.com'
+      }
+    };
+    try {
+      const response = await fetch(url, options);
+      const result = await response.text();
+      return {success:JSON.parse(result)};
+    } catch (error) {
+      console.error(error);
+      return {error:error};
+    }
+}
+export async function getProblemBySub(data:Submission){
+  const url = 'https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=false&fields=*';
+  try {
+    const response = await fetch(url,{
+      method: 'POST',
+      headers: {
+        'x-rapidapi-key': 'e0ef2dda81msh1ab4dd5082a6a65p1056d9jsn058abbe43255',
+        'x-rapidapi-host': 'judge0-ce.p.rapidapi.com',
+        'Content-Type': 'application/json'
+      },
+     body: JSON.stringify({
+      language_id: data.language_id,
+      source_code: data.source_code,
+      stdin: data.stdin,
+      expected_output:data.expected_output,
+    })
+    });
+    const result = await response.text();
+     return {token:result};
+  } catch (error) {
+    console.error(error);
+    return {error:error};
   }
 }
 export async function getuserSession(){

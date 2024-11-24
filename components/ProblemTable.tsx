@@ -18,7 +18,6 @@ import Link from "next/link";
     const {data:problems,isPending:loading} = useAllProb();
     if(loading) return <div className='w-full h-[100vh] bg-zinc-800'><Loader width={30} height={30}/></div>
     if(!problems || !Array.isArray(problems)) return <h1>No Data Found!</h1>
-    console.log(problems);
     // const problems:TableType[] = [
     //     {status:"attempted",title:"Two Sum",difficulty:"Easy"},
     //     {status:"accepted",title:"Add Two Numbers",difficulty:"Medium"},
